@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>Json在线解析及格式化验证</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <style></style>
+</head>
+
+<body style="over-flow:hidden;">
+    <header class="header" id="navbar">
+        <div class="row-fluid">
+            <div class="col-md-12" style="position:relative;">
+                <a class="logo" href="index.html"><span style="color:rgb(49, 78, 175);">Struct2</span>Json</a>
+                <a href="javascript:;" @click="openFileInVscode">打开说明文件</a>
+            </div>
+            <br style="clear:both;" />
+        </div>
+    </header>
+
+    <main class="row-fluid" style="height:85%;min-height:550px;" id="app">
+        <div class="col-md-6" style="padding:0px;height:100%;">
+            <textarea id="json-src" placeholder="在此输入json字符串..." class="form-control"
+                style="height:722px;padding:0 10px 10px 20px;border:0;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none; outline:none;">{{json}}</textarea>
+        </div>
+        <div class="col-md-6" style="padding:0;">
+            <div style="padding:10px;font-size:16px;border-bottom:solid 1px #ddd;" class="navi">
+                <!-- <a href="#" class="tip zip" title="压缩" data-placement="bottom"><i class="fa fa-database"></i></a>
+                <a href="#" class="tip xml" title="转XML" data-placement="bottom"><i class="fa fa-file-excel-o"></i></a> -->
+                <a href="#" class="tip shown" title="显示行号" data-placement="bottom"><i
+                        class="glyphicon glyphicon-sort-by-order"></i></a>
+                <a href="#" class="tip clear" title="清空" data-placement="bottom"><i class="fa fa-trash"></i></a>
+                <a href="#" class="tip save" title="保存" data-placement="bottom"><i class="fa fa-download"></i></a>
+                <a href="#" class="tip copy" title="复制" data-clipboard-target="#json-target" data-placement="bottom"><i
+                        class="fa fa-copy"></i></a>
+                <a href="#" class="tip compress" title="折叠" data-placement="bottom"><i class="fa fa-compress"></i></a>
+            </div>
+            <div id="right-box"
+                style="height:679px;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none;overflow-y:scroll; outline:none;position:relative;">
+                <div id="line-num"
+                    style="background-color:#fafafa;padding:0px 8px;float:left;border-right:dashed 1px #eee;display:none;z-index:-1;color:#999;position:absolute;text-align:center;over-flow:hidden;">
+                    <div>0</div>
+                </div>
+                <div class="ro" id="json-target" style="padding:0px 25px;">
+                </div>
+            </div>
+            <form id="form-save" method="POST"><input type="hidden" value="" id="txt-content" name="content"></form>
+        </div>
+        <br style="clear:both;" />
+    </main>
+    <!-- <link href="css/jquery.numberedtextarea.css" rel="stylesheet"> -->
+    <!-- <script src="js/jquery.message.js"></script> -->
+    <!-- <script src="js/jquery.xml2json.js"></script> -->
+    <!-- <script src="js/json2.js"></script> -->
+    <!-- <script src="js/FileSaver.min.js"></script> -->
+    <!-- <script src="js/clipboard.min.js"></script> -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.json.js"></script>
+    <script src="js/jsonlint.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="vue-2.5.17/vue.js"></script>
+    <script src="index.js"></script>
+    <script type="text/javascript">
+
+        var current_json = '';
+        var current_json_str = '';
+        var xml_flag = false;
+        var zip_flag = false;
+        var shown_flag = false;
+        var compress_flag = false;
+        var xml_text;
+        function init() {
+            xml_flag = false;
+            zip_flag = false;
+            shown_flag = false;
+            compress_flag = false;
+            renderLine();
+            $('.xml').attr('style', 'color:#999;');
+            $('.zip').attr('style', 'color:#999;');
+        }
+        $('#json-src').keyup(function(){
+            format($(this).val());
+        });
+
+        function format (content) {
+            init();
+            // var content = $.trim($(this).val());
+            var result = '';
+            if (content != '') {
+                try {
+                    content = content.replace(/[\r\n]/g, "");
+                    current_json = jsonlint.parse(content);
+                    current_json_str = JSON.stringify(current_json);
+                    result = new JSONFormat(content, 4).toString();
+                    // console.log(result);
+                } catch (e) {
+                    result = '<span style="color: #f1592a;font-weight:bold;">' + e + '</span>';
+                    current_json_str = result;
+                }
+                $('#json-target').html(result);
+            } else {
+                $('#json-target').html('');
+            }
+        }
+        
+        function renderLine() {
+            var line_num = $('#json-target').height() / 20;
+            $('#line-num').html("");
+            var line_num_html = "";
+            for (var i = 1; i < line_num + 1; i++) {
+                line_num_html += "<div>" + i + "<div>";
+            }
+            $('#line-num').html(line_num_html);
+        }
+        // (function ($) {
+        //     $.fn.innerText = function (msg) {
+        //         if (msg) {
+        //             if (document.body.innerText) {
+        //                 for (var i in this) {
+        //                     this[i].innerText = msg;
+        //                 }
+        //             } else {
+        //                 for (var i in this) {
+        //                     this[i].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
+        //                 }
+        //             }
+        //             return this;
+        //         } else {
+        //             if (document.body.innerText) {
+        //                 return this[0].innerText;
+        //             } else {
+        //                 return this[0].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
+        //             }
+        //         }
+        //     };
+        // })(jQuery);
+        // $('#json-src').keyup();  
+    </script>
+</body>
+
+</html>
+<footer style="padding:30px;text-align:center;font-family:'微软雅黑,arial';position:relative;">Copyright © 2021 By Colorofnight</a> , All Rights Reserved.
+    <p></p>
