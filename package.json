@@ -1,12 +1,12 @@
 {
 	"name": "struct2jsonschema",
-	"displayName": "HelloWorld示例",
-	"description": "以jsonchema的方式显示c语言结构体",
+	"displayName": "struct2jsonschema",
+	"description": "以jsonchema的方式可视化显示c语言结构体",
 	"keywords": [
 		"c struct",
 		"JsonShema"
 	],
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"publisher": "colorofnight",
 	"engines": {
 		"vscode": "^1.57.0"
@@ -70,5 +70,9 @@
 		"mocha": "^8.4.0",
 		"typescript": "^4.3.2",
 		"vscode-test": "^1.5.2"
-	}
+	},
+	"repository": {
+        "type": "git",
+        "url": "https://github.com/colorofnight86/struct2jsonschema"
+    }
 }

@@ -105,9 +105,6 @@ module.exports =function(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webview.jsonview',(uri)=>{
         vscode.window.showInformationMessage('show jsonview');
 
-        const projectPath = util.getProjectPath(uri);
-        if (!projectPath) return;
-        console.log("path:"+projectPath);
         const panel = vscode.window.createWebviewPanel(
             'Webview', // viewType
             "Struct的JSON Schema显示", // 视图标题
@@ -118,8 +115,12 @@ module.exports =function(context) {
             }
         );
         try{
+            const projectPath = util.getProjectPath(uri);
+            if (!projectPath) return;
+            console.log("path:"+projectPath);
+
             let jsonSchema = ""
-            //读取当前文件的内容
+            // 读取当前文件的内容
             openLocalFile(uri.path,text=>{
                 var struct_list = util.extractStruct(text);
                 if(struct_list[0]){

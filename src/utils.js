@@ -123,6 +123,12 @@ const util={
         }
         return projectPath;
     },
+    /**
+     * 弹出错误信息
+     */
+    showError: function(info) {
+        vscode.window.showErrorMessage(info);
+    },
 }
 
 module.exports = util

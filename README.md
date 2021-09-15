@@ -5,8 +5,10 @@
 ## 特性
 
 ### 结构体可视化
-
+c语言结构体
 ![feature 1](img/demo1-1.png)
+
+插件可视化窗口
 ![feature 1](img/demo1-2.png)
 
 ### 字符统计
@@ -14,8 +16,6 @@
 ![feature 2](img/demo2.png)
 
 ## 版本信息
-
-Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
