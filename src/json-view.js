@@ -86,12 +86,12 @@ const messageHandler = {
         invokeCallback(global.panel, message, util.getProjectName(global.projectPath));
     },
     openFileInFinder(global, message) {
-        util.openFileInFinder(`${global.projectPath}/${message.path}`);
+        // util.openFileInFinder(`${global.projectPath}/${message.path}`);
         // 这里的回调其实是假的，并没有真正判断是否成功
         invokeCallback(global.panel, message, {code: 0, text: '成功'});
     },
     openFileInVscode(global, message) {
-        util.openFileInVscode(`${global.projectPath}/${message.path}`, message.text);
+        // util.openFileInVscode(`${global.projectPath}/${message.path}`, message.text);
         invokeCallback(global.panel, message, {code: 0, text: '成功'});
     },
     openUrlInBrowser(global, message) {
@@ -115,9 +115,9 @@ module.exports =function(context) {
             }
         );
         try{
-            const projectPath = util.getProjectPath(uri);
-            if (!projectPath) return;
-            console.log("path:"+projectPath);
+            // const projectPath = util.getProjectPath(uri);
+            // if (!projectPath) return;
+            // console.log("path:"+projectPath);
 
             let jsonSchema = ""
             // 读取当前文件的内容
@@ -130,7 +130,7 @@ module.exports =function(context) {
                 }
             });
             
-            let global = { projectPath, panel};
+            let global = { panel };
             panel.webview.html = getWebViewContent(context,'src/view/index.html');
             //监听webview传来的消息
             panel.webview.onDidReceiveMessage(message => {

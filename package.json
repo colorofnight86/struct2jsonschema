@@ -16,10 +16,9 @@
 	],
 	"icon":"img/icon.png",
 	"activationEvents": [
-		"onCommand:helloworld.helloWorld",
 		"onCommand:webview.jsonview"
 	],
-	"main": "./src/extension.js",
+	"main": "./src/extension",
 	"contributes": {
 		"commands": [
 			{
@@ -51,7 +50,6 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",

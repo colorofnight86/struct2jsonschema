@@ -25,12 +25,13 @@ const util={
         var num_struct = this.countStr(content_file, keyword_start);
         var keyword_middle = '}';
         var keyword_end = ';';
-        var position_start = 0
+        var position_start = 0;
+        var position_middle = 0;
         var position_end=0;
         var flag=0;
         // 依次查找结构体
-        for (i=0;i<num_struct;i++){
-            content_struct="";
+        for (let i=0;i<num_struct;i++){
+            let content_struct="";
             position_start = content_file.indexOf(keyword_start,position_start);
             position_middle = content_file.indexOf(keyword_middle, position_start);
             position_end = content_file.indexOf(keyword_end, position_middle);
