@@ -6,7 +6,7 @@
 		"c struct",
 		"JsonShema"
 	],
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publisher": "colorofnight",
 	"engines": {
 		"vscode": "^1.57.0"
@@ -14,7 +14,7 @@
 	"categories": [
 		"Other"
 	],
-	"icon":"img/icon.png",
+	"icon": "img/icon.png",
 	"activationEvents": [
 		"onCommand:webview.jsonview"
 	],
@@ -22,24 +22,23 @@
 	"contributes": {
 		"commands": [
 			{
-				"command":"webview.jsonview",
+				"command": "webview.jsonview",
 				"title": "view code in json",
-				"icon":{
+				"icon": {
 					"light": "./img/json.svg",
 					"dark": "./img/json.svg"
 				}
 			}
 		],
-		"keybindings": [
-        ],
+		"keybindings": [],
 		"menus": {
-            "editor/context": [
+			"editor/context": [
 				{
-                    "when": "resourceLangId == c",
-                    "command": "webview.jsonview",
-                    "group": "navigation"
-                }
-            ],
+					"when": "resourceLangId == c",
+					"command": "webview.jsonview",
+					"group": "navigation"
+				}
+			],
 			"editor/title": [
 				{
 					"when": "resourceLangId == c",
@@ -70,7 +69,7 @@
 		"vscode-test": "^1.5.2"
 	},
 	"repository": {
-        "type": "git",
-        "url": "https://github.com/colorofnight86/struct2jsonschema"
-    }
+		"type": "git",
+		"url": "https://github.com/colorofnight86/struct2jsonschema"
+	}
 }
