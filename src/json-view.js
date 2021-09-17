@@ -127,21 +127,18 @@ module.exports =function(context) {
                     let json = jsonFactory.schemaJoint(struct_list);
                     let obj = JSON.parse(json);
                     jsonSchema = JSON.stringify(obj);
+                    jsonSchema = jsonFactory.schemaJoint(struct_list);
                 }
+
+                panel.webview.postMessage({cmd: 'dataLoad', data: jsonSchema});
             });
             
             let global = { panel };
             panel.webview.html = getWebViewContent(context,'src/view/index.html');
             //监听webview传来的消息
             panel.webview.onDidReceiveMessage(message => {
-
                 if (messageHandler[message.cmd]) {
-                    if(message.cmd=="init"){
-                        console.log("jsonSchema"+jsonSchema);
-                        messageHandler[message.cmd](global, message,jsonSchema);
-                    }else{
-                        messageHandler[message.cmd](global, message);
-                    }
+                    messageHandler[message.cmd](global, message);
                 } else {
                     util.showError(`未找到名为 ${message.cmd} 回调方法!`);
                 }

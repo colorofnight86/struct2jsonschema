@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 
 <head>
-    <title>Json在线解析及格式化验证</title>
+    <title>Json在线解析及格式化验证 - json.javatop.cn</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="Cache-Control" content="max-age=7200" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,25 +14,24 @@
 </head>
 
 <body style="over-flow:hidden;">
-    <header class="header" id="navbar">
+    <header class="header">
         <div class="row-fluid">
-            <div class="col-md-12" style="position:relative;">
+            <div class="col-md-5" style="position:relative;">
                 <a class="logo" href="index.html"><span style="color:rgb(49, 78, 175);">Struct2</span>Json</a>
-                <!-- <a href="javascript:;" @click="openFileInVscode">打开说明文件</a> -->
             </div>
             <br style="clear:both;" />
         </div>
     </header>
 
-    <main class="row-fluid" style="height:85%;min-height:550px;" id="app">
-        <div class="col-md-6" style="padding:0px;height:100%;">
-            <textarea id="json-src" placeholder="在此输入json字符串..." class="form-control"
-                style="height:722px;padding:0 10px 10px 20px;border:0;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none; outline:none;">{{json}}</textarea>
+
+    <main class="row-fluid" style="height:85%;min-height:550px;">
+        <div class="col-md-6" style="padding:0px;height:100%;" id="app">
+            <textarea id="json-src" placeholder="在此输入json字符串或XML字符串..." class="form-control"
+                style="height:722px;padding:0 10px 10px 20px;border:0;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none; outline:none;"></textarea>
         </div>
         <div class="col-md-6" style="padding:0;">
             <div style="padding:10px;font-size:16px;border-bottom:solid 1px #ddd;" class="navi">
-                <!-- <a href="#" class="tip zip" title="压缩" data-placement="bottom"><i class="fa fa-database"></i></a>
-                <a href="#" class="tip xml" title="转XML" data-placement="bottom"><i class="fa fa-file-excel-o"></i></a> -->
+                <a href="#" class="tip zip" title="压缩" data-placement="bottom"><i class="fa fa-database"></i></a>
                 <a href="#" class="tip shown" title="显示行号" data-placement="bottom"><i
                         class="glyphicon glyphicon-sort-by-order"></i></a>
                 <a href="#" class="tip clear" title="清空" data-placement="bottom"><i class="fa fa-trash"></i></a>
@@ -54,20 +53,20 @@
         </div>
         <br style="clear:both;" />
     </main>
-    <!-- <link href="css/jquery.numberedtextarea.css" rel="stylesheet"> -->
-    <!-- <script src="js/jquery.message.js"></script> -->
-    <!-- <script src="js/jquery.xml2json.js"></script> -->
-    <!-- <script src="js/json2.js"></script> -->
-    <!-- <script src="js/FileSaver.min.js"></script> -->
-    <!-- <script src="js/clipboard.min.js"></script> -->
+    <link href="css/jquery.numberedtextarea.css" rel="stylesheet">
     <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.message.js"></script>
     <script src="js/jquery.json.js"></script>
+    <script src="js/json2.js"></script>
     <script src="js/jsonlint.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="vue-2.5.17/vue.js"></script>
-    <script src="index.js"></script>
+    <script src="js/FileSaver.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/jquery.numberedtextarea.js"></script>
+    <!-- <script src="vue-2.5.17/vue.js"></script> -->
+    <!-- <script src="index.js"></script> -->
     <script type="text/javascript">
-
+        $('textarea').numberedtextarea();
         var current_json = '';
         var current_json_str = '';
         var xml_flag = false;
@@ -75,6 +74,7 @@
         var shown_flag = false;
         var compress_flag = false;
         var xml_text;
+        $('.tip').tooltip();
         function init() {
             xml_flag = false;
             zip_flag = false;
@@ -84,13 +84,9 @@
             $('.xml').attr('style', 'color:#999;');
             $('.zip').attr('style', 'color:#999;');
         }
-        $('#json-src').keyup(function(){
-            format($(this).val());
-        });
-
-        function format (content) {
+        $('#json-src').keyup(function () {
             init();
-            // var content = $.trim($(this).val());
+            var content = $.trim($(this).val());
             var result = '';
             if (content != '') {
                 try {
@@ -107,8 +103,36 @@
             } else {
                 $('#json-target').html('');
             }
-        }
-        
+        });
+        $('.xml').click(function () {
+            if (xml_flag) {
+                $('#json-src').keyup();
+            } else {
+                var result = $.json2xml(current_json);
+                $('#json-target').html('<textarea style="width:100%;position:absolute;height: 80vh;min-height:480px;border:0;resize:none;">' + result + '</textarea>');
+                xml_text = result;
+                xml_flag = true;
+                $(this).attr('style', 'color:#15b374;');
+            }
+        });
+        $('.shown').click(function () {
+            if (!shown_flag) {
+                renderLine();
+                $('#json-src').attr("style", "height:722px;padding:0 10px 10px 40px;border:0;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none; outline:none;");
+                $('#json-target').attr("style", "padding:0px 50px;");
+                $('#line-num').show();
+                $('.numberedtextarea-line-numbers').show();
+                shown_flag = true;
+                $(this).attr('style', 'color:#15b374;');
+            } else {
+                $('#json-src').attr("style", "height:722px;padding:0 10px 10px 20px;border:0;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none; outline:none;");
+                $('#json-target').attr("style", "padding:0px 20px;");
+                $('#line-num').hide();
+                $('.numberedtextarea-line-numbers').hide();
+                shown_flag = false;
+                $(this).attr('style', 'color:#999;');
+            }
+        });
         function renderLine() {
             var line_num = $('#json-target').height() / 20;
             $('#line-num').html("");
@@ -118,32 +142,119 @@
             }
             $('#line-num').html(line_num_html);
         }
-        // (function ($) {
-        //     $.fn.innerText = function (msg) {
-        //         if (msg) {
-        //             if (document.body.innerText) {
-        //                 for (var i in this) {
-        //                     this[i].innerText = msg;
-        //                 }
-        //             } else {
-        //                 for (var i in this) {
-        //                     this[i].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
-        //                 }
-        //             }
-        //             return this;
-        //         } else {
-        //             if (document.body.innerText) {
-        //                 return this[0].innerText;
-        //             } else {
-        //                 return this[0].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
-        //             }
-        //         }
-        //     };
-        // })(jQuery);
-        // $('#json-src').keyup();  
+        $('.zip').click(function () {
+            if (zip_flag) {
+                $('#json-src').keyup();
+            } else {
+                $('#json-target').html(current_json_str);
+                zip_flag = true;
+                xml_flag = false;
+                $(this).attr('style', 'color:#15b374;');
+            }
+
+        });
+        $('.compress').click(function () {
+            if (!compress_flag) {
+                $(this).attr('style', 'color:#15b374;');
+                //$(this).attr('title','取消折叠').tooltip('fixTitle').tooltip('show');
+                $($(".fa-minus-square-o").toArray().reverse()).click();
+                compress_flag = true;
+            } else {
+                while ($(".fa-plus-square-o").length > 0) {
+                    $(".fa-plus-square-o").click();
+                }
+                compress_flag = false;
+                $(this).attr('style', 'color:#555;');
+                $(this).attr('title', '折叠').tooltip('fixTitle').tooltip('show');
+            }
+        });
+        $('.clear').click(function () {
+            $('#json-src').val('');
+            $('#json-target').html('');
+        });
+        (function ($) {
+            $.fn.innerText = function (msg) {
+                if (msg) {
+                    if (document.body.innerText) {
+                        for (var i in this) {
+                            this[i].innerText = msg;
+                        }
+                    } else {
+                        for (var i in this) {
+                            this[i].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
+                        }
+                    }
+                    return this;
+                } else {
+                    if (document.body.innerText) {
+                        return this[0].innerText;
+                    } else {
+                        return this[0].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
+                    }
+                }
+            };
+        })(jQuery);
+        $('.save').click(function () {
+            var text;
+            if (xml_flag) {
+                var text1 = $.trim($('#json-src').val());
+                text = xml_text;
+            } else {
+                var html = $('#json-target').html().replace(/\n/g, '<br/>').replace(/\n/g, '<br>');
+                text = $('#json-target').innerText().replace('　　', '    ');
+            }
+            var blob = new Blob([text], { type: "application/json;charset=utf-8" });
+            var timestamp = new Date().getTime();
+            saveAs(blob, "format." + timestamp + ".json");
+        });
+        $('.copy').click(function () {
+        });
+        var clipboard = new Clipboard('.copy');
+    </script>
+
+    <script type='text/javascript'>
+        // vscode webview 网页和普通网页的唯一区别：多了一个acquireVsCodeApi方法
+        const vscode =  acquireVsCodeApi();
+        const callbacks = {};
+
+        /**
+         * 调用vscode原生api
+         * @param data 可以是类似 {cmd: 'xxx', param1: 'xxx'}，也可以直接是 cmd 字符串
+         * @param cb 可选的回调函数
+         */
+        function callVscode(data, cb) {
+            if (typeof data === 'string') {
+                data = { cmd: data };
+            }
+            if (cb) {
+                // 时间戳加上5位随机数
+                const cbid = Date.now() + '' + Math.round(Math.random() * 100000);
+                callbacks[cbid] = cb;
+                data.cbid = cbid;
+            }
+            vscode.postMessage(data);
+        }
+
+        window.addEventListener('message', event => {
+            const message = event.data;
+            switch (message.cmd) {
+                case 'vscodeCallback':
+                    console.log(message.data);
+                    (callbacks[message.cbid] || function () { })(message.data);
+                    delete callbacks[message.cbid];
+                    break;
+                case 'dataLoad':
+                    document.getElementById('json-src').value = message.data;
+                    $('#json-src').keyup();
+                default: break;
+            }
+        });
+
+        window.addEventListener('mousemove', event => {
+            callVscode({ cmd: 'alert', info: "鼠标移动" }, null);
+        })
     </script>
 </body>
 
 </html>
 <footer style="padding:30px;text-align:center;font-family:'微软雅黑,arial';position:relative;">Copyright © 2021 By Colorofnight</a> , All Rights Reserved.
-    <p></p>

@@ -29,25 +29,27 @@ window.addEventListener('message', event => {
             (callbacks[message.cbid] || function () { })(message.data);
             delete callbacks[message.cbid];
             break;
+        case 'dataLoad':
+            document.getElementById('json-src').value = message.data;
+            $('#json-src').keyup();
         default: break;
     }
 });
+
 
 new Vue({
     el: '#app',
     data: {
         message: '加载中',
-        json:'{\n"Json解析":"支持格式化高亮折叠",\n"支持XML转换":"支持XML转换Json,Json转XML",\n"Json格式验证":"更详细准确的错误信息"\n}'
+        json:'{\n"Json解析":"支持格式化高亮折叠",\n"使用方法":"在上面/左边的输入框中输入json",\n"Json格式验证":"更详细准确的错误信息"\n}'
     },
-    mounted() {
-        // callVscode('getProjectName', projectName => this.projectName = projectName);
+    created(){
         callVscode('init', (res)=>{
-            this.json = res.data;
-            $('#json-src').keyup();
+            // this.json = res.data;
+            // $('#json-src').innerText = res.data;
+            // $('#json-src').keyup();
         });
     },
-    watch: {
-    },
     methods: {
         // 模拟alert
         alert(info) {
@@ -58,35 +60,5 @@ new Vue({
         error(info) {
             callVscode({ cmd: 'error', info: info }, null);
         },
-    }
-});
-
-new Vue({
-    el: '#navbar',
-    methods: {
-        // 模拟alert
-        alert(info) {
-            console.log("alert");
-            callVscode({ cmd: 'alert', info: info }, null);
-        },
-        // 弹出错误提示
-        error(info) {
-            callVscode({ cmd: 'error', info: info }, null);
-        },
-        openFileInFinder() {
-            callVscode({cmd: 'openFileInFinder', path: `package.json`}, () => {
-                this.alert('打开成功！');
-            });
-        },
-        openFileInVscode() {
-            callVscode({cmd: 'openFileInVscode', path: `README.md`}, () => {
-                this.alert('打开README.md成功！');
-            });
-        },
-        openUrlInBrowser() {
-            callVscode({cmd: 'openUrlInBrowser', url: `https://artist.alibaba.com/`}, () => {
-                this.alert('打开前端艺术家主页成功！');
-            });
-        }
     }
 });

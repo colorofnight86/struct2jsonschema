@@ -1,9 +1,26 @@
 # Change Log
 
-All notable changes to the "helloworld" extension will be documented in this file.
+## 1.0.0
+- initial extension
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## 1.0.1
+- `added` struct to jsonschema
+- `added` jsonschema format
+
+## 1.0.2
+- `added` character counter
+
+## 1.0.3
+- `fixed` bugs
+
+## 1.0.4
+- `fixed` remove unnecessary code
+
+## 1.0.5
+- `fixed` incorrect display issue
 
 ## [Unreleased]
 
-- Initial release
+- exception catch
+- display optimization
+- binary file edit
