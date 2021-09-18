@@ -26,7 +26,7 @@
 
     <main class="row-fluid" style="height:85%;min-height:550px;">
         <div class="col-md-6" style="padding:0px;height:100%;" id="app">
-            <textarea id="json-src" placeholder="在此输入json字符串或XML字符串..." class="form-control"
+            <textarea id="json-src" placeholder="源文件结构体解析失败&#13;&#10;请检查源文件是否有错误或有不支持的数据类型&#13;&#10;或在此输入json字符串..." class="form-control"
                 style="height:722px;padding:0 10px 10px 20px;border:0;border-right:solid 1px #ddd;border-bottom:solid 1px #ddd;border-radius:0;resize: none; outline:none;"></textarea>
         </div>
         <div class="col-md-6" style="padding:0;">
@@ -104,17 +104,6 @@
                 $('#json-target').html('');
             }
         });
-        $('.xml').click(function () {
-            if (xml_flag) {
-                $('#json-src').keyup();
-            } else {
-                var result = $.json2xml(current_json);
-                $('#json-target').html('<textarea style="width:100%;position:absolute;height: 80vh;min-height:480px;border:0;resize:none;">' + result + '</textarea>');
-                xml_text = result;
-                xml_flag = true;
-                $(this).attr('style', 'color:#15b374;');
-            }
-        });
         $('.shown').click(function () {
             if (!shown_flag) {
                 renderLine();
@@ -172,28 +161,28 @@
             $('#json-src').val('');
             $('#json-target').html('');
         });
-        (function ($) {
-            $.fn.innerText = function (msg) {
-                if (msg) {
-                    if (document.body.innerText) {
-                        for (var i in this) {
-                            this[i].innerText = msg;
-                        }
-                    } else {
-                        for (var i in this) {
-                            this[i].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
-                        }
-                    }
-                    return this;
-                } else {
-                    if (document.body.innerText) {
-                        return this[0].innerText;
-                    } else {
-                        return this[0].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
-                    }
-                }
-            };
-        })(jQuery);
+        // (function ($) {
+        //     $.fn.innerText = function (msg) {
+        //         if (msg) {
+        //             if (document.body.innerText) {
+        //                 for (var i in this) {
+        //                     this[i].innerText = msg;
+        //                 }
+        //             } else {
+        //                 for (var i in this) {
+        //                     this[i].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
+        //                 }
+        //             }
+        //             return this;
+        //         } else {
+        //             if (document.body.innerText) {
+        //                 return this[0].innerText;
+        //             } else {
+        //                 return this[0].innerHTML.replace(/&amp;lt;br&amp;gt;/gi, "n").replace(/(&amp;lt;([^&amp;gt;]+)&amp;gt;)/gi, "");
+        //             }
+        //         }
+        //     };
+        // })(jQuery);
         $('.save').click(function () {
             var text;
             if (xml_flag) {
@@ -249,12 +238,9 @@
                 default: break;
             }
         });
-
-        window.addEventListener('mousemove', event => {
-            callVscode({ cmd: 'alert', info: "鼠标移动" }, null);
-        })
     </script>
 </body>
 
 </html>
 <footer style="padding:30px;text-align:center;font-family:'微软雅黑,arial';position:relative;">Copyright © 2021 By Colorofnight</a> , All Rights Reserved.
+

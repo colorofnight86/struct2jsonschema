@@ -115,23 +115,21 @@ module.exports =function(context) {
             }
         );
         try{
-            // const projectPath = util.getProjectPath(uri);
-            // if (!projectPath) return;
-            // console.log("path:"+projectPath);
-
             let jsonSchema = ""
+            
             // 读取当前文件的内容
-            openLocalFile(uri.path,text=>{
-                var struct_list = util.extractStruct(text);
-                if(struct_list[0]){
-                    let json = jsonFactory.schemaJoint(struct_list);
-                    let obj = JSON.parse(json);
-                    jsonSchema = JSON.stringify(obj);
-                    jsonSchema = jsonFactory.schemaJoint(struct_list);
-                }
-
-                panel.webview.postMessage({cmd: 'dataLoad', data: jsonSchema});
-            });
+            if(typeof(uri) != "undefined"){
+                openLocalFile(uri.path,text=>{
+                    var struct_list = util.extractStruct(text);
+                    if(struct_list[0]){
+                        let json = jsonFactory.schemaJoint(struct_list);
+                        // let obj = JSON.parse(json);
+                        // jsonSchema = JSON.stringify(obj);
+                        jsonSchema = jsonFactory.schemaJoint(struct_list);
+                    }
+                    panel.webview.postMessage({cmd: 'dataLoad', data: jsonSchema});
+                });
+            }
             
             let global = { panel };
             panel.webview.html = getWebViewContent(context,'src/view/index.html');
