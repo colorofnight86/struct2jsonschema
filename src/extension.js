@@ -25,6 +25,7 @@ function activate(context) {
 	context.subscriptions.push(counter);
 
 	require('./json-view')(context);
+	require('./struct-view')(context);
 
 }
 

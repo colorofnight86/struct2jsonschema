@@ -16,7 +16,8 @@
 	],
 	"icon": "img/icon.png",
 	"activationEvents": [
-		"onCommand:webview.jsonview"
+		"onCommand:webview.jsonview",
+		"onCommand:webview.structview"
 	],
 	"main": "./src/extension",
 	"contributes": {
@@ -28,6 +29,10 @@
 					"light": "./img/json.svg",
 					"dark": "./img/json.svg"
 				}
+			},
+			{
+				"command": "webview.structview",
+				"title": "view struct data"
 			}
 		],
 		"keybindings": [],
@@ -36,6 +41,11 @@
 				{
 					"when": "resourceLangId == c",
 					"command": "webview.jsonview",
+					"group": "navigation"
+				},
+				{
+					"when": "resourceLangId == c",
+					"command": "webview.structview",
 					"group": "navigation"
 				}
 			],

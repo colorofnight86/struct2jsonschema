@@ -55,7 +55,7 @@
     </main>
     <link href="css/jquery.numberedtextarea.css" rel="stylesheet">
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.message.js"></script>
+    <!-- <script src="js/jquery.message.js"></script> -->
     <script src="js/jquery.json.js"></script>
     <script src="js/json2.js"></script>
     <script src="js/jsonlint.js"></script>
@@ -93,7 +93,7 @@
                     content = content.replace(/[\r\n]/g, "");
                     current_json = jsonlint.parse(content);
                     current_json_str = JSON.stringify(current_json);
-                    result = new JSONFormat(content, 4).toString();
+                    result = new JSONFormat(content).toString();
                     // console.log(result);
                 } catch (e) {
                     result = '<span style="color: #f1592a;font-weight:bold;">' + e + '</span>';
@@ -235,7 +235,9 @@
                 case 'dataLoad':
                     document.getElementById('json-src').value = message.data;
                     $('#json-src').keyup();
-                default: break;
+                    break;
+                default: 
+                    break;
             }
         });
     </script>

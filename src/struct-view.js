@@ -21,6 +21,7 @@ function getWebViewContent(context, templatePath) {
     return html;
 }
 
+
 /**
  * 从某个文件读取纯文本内容
  * @param {*} filePath 文件路径
@@ -40,6 +41,7 @@ function openLocalFile(filePath,callback) {
         })
 }
 
+
 /**
  * 执行回调函数
  * @param {*} panel 
@@ -55,45 +57,11 @@ function openLocalFile(filePath,callback) {
     panel.webview.postMessage({cmd: 'vscodeCallback', cbid: message.cbid, data: resp});
 }
 
-/**
- * 存放所有消息回调函数，根据 message.cmd 来决定调用哪个方法
- */
-const messageHandler = {
-    init(global, message, jsonSchema){
-        util.showInfo("initialized");
-        invokeCallback(global.panel, message, {code: 0, text: '成功', data: jsonSchema})
-    },
-    // 弹出提示
-    alert(global, message) {
-        util.showInfo(message.info);
-    },
-    // 显示错误提示
-    error(global, message) {
-        util.showError(message.info);
-    },
-    // 获取工程名
-    getProjectName(global, message) {
-        invokeCallback(global.panel, message, util.getProjectName(global.projectPath));
-    },
-    openFileInFinder(global, message) {
-        // util.openFileInFinder(`${global.projectPath}/${message.path}`);
-        // 这里的回调其实是假的，并没有真正判断是否成功
-        invokeCallback(global.panel, message, {code: 0, text: '成功'});
-    },
-    openFileInVscode(global, message) {
-        // util.openFileInVscode(`${global.projectPath}/${message.path}`, message.text);
-        invokeCallback(global.panel, message, {code: 0, text: '成功'});
-    },
-    openUrlInBrowser(global, message) {
-        util.openUrlInBrowser(message.url);
-        invokeCallback(global.panel, message, {code: 0, text: '成功'});
-    }
-};
 
 module.exports =function(context) {
     //注册webview
-    context.subscriptions.push(vscode.commands.registerCommand('webview.jsonview',(uri)=>{
-        vscode.window.showInformationMessage('show jsonview');
+    context.subscriptions.push(vscode.commands.registerCommand('webview.structview',(uri)=>{
+        vscode.window.showInformationMessage('Show struct data');
 
         const panel = vscode.window.createWebviewPanel(
             'Webview', // viewType
@@ -105,19 +73,14 @@ module.exports =function(context) {
             }
         );
         try{
-            let jsonSchema = ""
-            let jsonSchema2 = {}
+            let jsonSchema = {}
 
             // 读取当前文件的内容
             if(typeof(uri) != "undefined"){
                 openLocalFile(uri.path,text=>{
                     var struct_list = util.extractStruct(text);
                     if(struct_list[0]){
-                        let json = jsonFactory.schemaJoint(struct_list);
-                        // let obj = JSON.parse(json);
-                        // jsonSchema = JSON.stringify(obj);
-                        jsonSchema = jsonFactory.schemaJoint(struct_list);
-                        jsonSchema2 = {"property":{"led":{"led1":{"color":"blue","age":3},"led2":{"color":"green","age":1},"led3":{"color":"red","age":2}},"apple":{"apple1":{"size":"big"},"apple2":{"size":"small"}}}}
+                        jsonSchema = {"property":{"led":{"led1":{"color":"blue","age":3},"led2":{"color":"green","age":1},"led3":{"color":"red","age":2}},"apple":{"apple1":{"size":"big"},"apple2":{"size":"small"}}}}
                     }
                     panel.webview.postMessage({cmd: 'dataLoad', data: jsonSchema});
                     // console.log(jsonSchema)
@@ -126,20 +89,16 @@ module.exports =function(context) {
                 });
             }
             
-            
-            // panel.webview.html = getWebViewContent(context,'src/view/dist/index.html');
-            panel.webview.html = getWebViewContent(context,'src/view/index.html');
+            panel.webview.html = getWebViewContent(context,'src/view/dist/index.html');
 
-
-            let global = { panel };
             //监听webview传来的消息
-            panel.webview.onDidReceiveMessage(message => {
-                if (messageHandler[message.cmd]) {
-                    messageHandler[message.cmd](global, message);
-                } else {
-                    util.showError(`未找到名为 ${message.cmd} 回调方法!`);
-                }
-            }, undefined, context.subscriptions);
+            // panel.webview.onDidReceiveMessage(message => {
+            //     if (messageHandler[message.cmd]) {
+            //         messageHandler[message.cmd](global, message);
+            //     } else {
+            //         util.showError(`未找到名为 ${message.cmd} 回调方法!`);
+            //     }
+            // }, undefined, context.subscriptions);
 
         }catch(err){
             console.log(err);
